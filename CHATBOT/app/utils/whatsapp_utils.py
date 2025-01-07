@@ -27,7 +27,7 @@ def get_text_message_input(recipient, text):
 
 def generate_response(response):
     # Return text in uppercase
-    return "Chupame los huevos, no tenemos natacion"
+    return response
 
 
 def send_message(data):
@@ -82,8 +82,14 @@ def process_whatsapp_message(body):
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
     message_body = message["text"]["body"]
 
+    if message_body=="1":
+        ToSend="Introduzca nombre y apellido"
+    elif message_body=="2":
+        ToSend="Diga horario que desa reservar"
+    else:
+        ToSend="1) hacerme socio\n2) reservar cancha"
     # TODO: implement custom function here
-    response = generate_response(message_body)
+    response = generate_response(ToSend)
 
     # OpenAI Integration
     # response = generate_response(message_body, wa_id, name)
