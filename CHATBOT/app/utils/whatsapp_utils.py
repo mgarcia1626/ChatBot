@@ -2,6 +2,9 @@ import logging
 from flask import current_app, jsonify
 import json
 import requests
+from app.utils import variables
+
+print(variables.count)
 
 # from app.services.openai_service import generate_response
 import re
@@ -23,6 +26,7 @@ def get_text_message_input(recipient, text):
             "text": {"preview_url": False, "body": text},
         }
     )
+    
 
 
 def generate_response(response):
@@ -81,13 +85,25 @@ def process_whatsapp_message(body):
 
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
     message_body = message["text"]["body"]
+    
+    print(variables.count)
 
-    if message_body=="1":
+    if variables.count==0:
+        ToSend="1) hacerme socio\n2) reservar cancha"
+        variables.count=1
+        
+    elif message_body=="1":
         ToSend="Introduzca nombre y apellido"
+
     elif message_body=="2":
         ToSend="Diga horario que desa reservar"
+    
     else:
-        ToSend="1) hacerme socio\n2) reservar cancha"
+        ToSend="introduzca los datos correctamente"
+        variables.count=200000000000
+        print(variables.count)
+    
+    print(variables.socios)
     # TODO: implement custom function here
     response = generate_response(ToSend)
 

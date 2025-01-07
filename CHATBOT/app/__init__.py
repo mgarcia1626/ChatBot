@@ -2,6 +2,7 @@ from flask import Flask
 from app.config import load_configurations, configure_logging
 from .views import webhook_blueprint
 
+print("blanco")
 
 def create_app():
     app = Flask(__name__)
