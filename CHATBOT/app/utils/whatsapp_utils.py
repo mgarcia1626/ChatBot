@@ -3,8 +3,9 @@ from flask import current_app, jsonify
 import json
 import requests
 from app.utils import variables
+from app.utils.variables import socio
 
-print(variables.count)
+#print(variables.count)
 
 # from app.services.openai_service import generate_response
 import re
@@ -85,34 +86,79 @@ def process_whatsapp_message(body):
 
     message = body["entry"][0]["changes"][0]["value"]["messages"][0]
     message_body = message["text"]["body"]
-    
-    print(variables.count)
+           
+    #if para salvar informacion
 
     if variables.count==0:
         ToSend="1) hacerme socio\n2) reservar cancha"
+        variables.nuevo_Socio.poner_nombre(None)
+        variables.nuevo_Socio.Poner_documento(None)
         variables.count=1
-        
-    elif message_body=="1":
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+
+    elif message_body=="1" and variables.count==1:
+        #variables.nuevo_Socio.poner_nombre(None)
+        #variables.nuevo_Socio.Poner_documento(None)
         ToSend="Introduzca nombre y apellido"
+        variables.count=2
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+
+    elif variables.count==2:
+        variables.nuevo_Socio.poner_nombre(message_body)
+        variables.count=3
+        ToSend="Introduzca Documento"
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+
+    elif variables.count==3:
+        variables.nuevo_Socio.Poner_documento(message_body)
+        variables.count=4
+        #print("ESTE ES EL NUEVO SOCIO",variables.nuevo_Socio.nombre)
+        ToSend="Estan sus datos correctos?"+"\nNombre y apellido : "+ str(variables.nuevo_Socio.nombre) + "\nDocumento : " + str(variables.nuevo_Socio.documento) + "\nResponda Si o No"
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+        #data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(variables.nuevo_Socio))
+        #send_message(data)
+
+    elif variables.count==4 and message_body=="Si":
+        variables.agregar_aLista(variables.nuevo_Socio)
+        #print(str(variables.socios[0]))
+        variables.count=0
+        variables.data_socio()
+        ToSend="Gracias , recuerde que no tenemos natacion"
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+
+    elif variables.count==4 and message_body=="No":
+        variables.count=2
+        variables.nuevo_Socio.poner_nombre(None)
+        variables.nuevo_Socio.Poner_documento(None)
+        ToSend="Por favor vuelva a introducir su nombre y apellido"
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
 
     elif message_body=="2":
         ToSend="Diga horario que desa reservar"
+        variables.count=0
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response("GRACIAS"))
+        send_message(data)
     
     else:
         ToSend="introduzca los datos correctamente"
         variables.count=200000000000
         print(variables.count)
     
-    print(variables.socios)
     # TODO: implement custom function here
-    response = generate_response(ToSend)
+    #response = generate_response(ToSend)
 
     # OpenAI Integration
     # response = generate_response(message_body, wa_id, name)
     # response = process_text_for_whatsapp(response)
 
-    data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
-    send_message(data)
+    #data = get_text_message_input(current_app.config["RECIPIENT_WAID"], response)
+    #send_message(data)
 
 
 def is_valid_whatsapp_message(body):
