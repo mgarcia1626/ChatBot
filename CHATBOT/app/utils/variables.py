@@ -40,4 +40,57 @@ def data_socio():
     # Exportar a Excel
     df_socios.to_excel("socios.xlsx", index=False)
 
+def Decision_func(Count,message_body):    
+    if count==0:
+        nuevo_Socio.poner_nombre(None)
+        nuevo_Socio.Poner_documento(None)
+        Counter=1
+        ToSend="1) hacerme socio\n2) reservar cancha"
+
+    elif message_body=="1" and count==1:
+        ToSend="Introduzca nombre y apellido"
+        Counter=2
+        
+    elif count==2:
+        nuevo_Socio.poner_nombre(message_body)
+        ToSend="Introduzca Documento"
+        Counter=3
+
+    elif count==3:
+        nuevo_Socio.Poner_documento(message_body)
+        Counter=4
+        ToSend="Estan sus datos correctos?"+"\nNombre y apellido : "+ str(nuevo_Socio.nombre) + "\nDocumento : " + str(nuevo_Socio.documento) + "\nResponda Si o No"
+        
+    elif count==4 and message_body=="Si":
+        agregar_aLista(nuevo_Socio)
+        data_socio()
+        ToSend="Gracias , recuerde que no tenemos natacion"
+        Counter=0
+        
+    elif count==4 and message_body=="No":
+        nuevo_Socio.poner_nombre(None)
+        nuevo_Socio.Poner_documento(None)
+        ToSend="Por favor vuelva a introducir su nombre y apellido"
+        Counter=4
+
+    elif count==4 and (message_body!="No" and message_body!="Si"):
+        if ErrorCounter==3:
+            nuevo_Socio.poner_nombre(None)
+            nuevo_Socio.Poner_documento(None)
+            ToSend="Comenzaremos de nuevo"
+        else:
+            ToSend="Estan sus datos correctos?"+"\nNombre y apellido : "+ str(nuevo_Socio.nombre) + "\nDocumento : " + str(nuevo_Socio.documento) + "\nResponda Si o No"
+            Counter=3
+            
+
+    elif message_body=="2":
+        ToSend="Diga horario que desa reservar"
     
+    else:
+        nuevo_Socio.poner_nombre(None)
+        nuevo_Socio.Poner_documento(None)
+        ToSend="1) hacerme socio\n2) reservar cancha"
+    
+    return ToSend,Counter
+
+
