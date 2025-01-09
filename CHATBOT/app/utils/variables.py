@@ -5,7 +5,7 @@ import pandas as pd
 count=0
 Lista_de_socios=[]
 socios_dict = []
-
+ErrorCounter=0
 
 class socio:
     def __init__(self,nombre,documento):
@@ -21,9 +21,9 @@ class socio:
         #print(f"Edad establecida: {self.edad}")
 
 def agregar_aLista(socio_cargado):
-    Nombre=socio_cargado.nombre
-    Documento=socio_cargado.documento
-    Usuario=[Nombre,Documento]
+    Name=socio_cargado.nombre
+    Document=socio_cargado.documento
+    Usuario=[Name,Document]
     print(Usuario)
     Lista_de_socios.append(Usuario)
     print(Lista_de_socios)
@@ -40,4 +40,4 @@ def data_socio():
     # Exportar a Excel
     df_socios.to_excel("socios.xlsx", index=False)
 
-
+    

@@ -28,8 +28,6 @@ def get_text_message_input(recipient, text):
         }
     )
     
-
-
 def generate_response(response):
     # Return text in uppercase
     return response
@@ -98,8 +96,6 @@ def process_whatsapp_message(body):
         send_message(data)
 
     elif message_body=="1" and variables.count==1:
-        #variables.nuevo_Socio.poner_nombre(None)
-        #variables.nuevo_Socio.Poner_documento(None)
         ToSend="Introduzca nombre y apellido"
         variables.count=2
         data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
@@ -115,16 +111,12 @@ def process_whatsapp_message(body):
     elif variables.count==3:
         variables.nuevo_Socio.Poner_documento(message_body)
         variables.count=4
-        #print("ESTE ES EL NUEVO SOCIO",variables.nuevo_Socio.nombre)
         ToSend="Estan sus datos correctos?"+"\nNombre y apellido : "+ str(variables.nuevo_Socio.nombre) + "\nDocumento : " + str(variables.nuevo_Socio.documento) + "\nResponda Si o No"
         data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
         send_message(data)
-        #data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(variables.nuevo_Socio))
-        #send_message(data)
 
     elif variables.count==4 and message_body=="Si":
         variables.agregar_aLista(variables.nuevo_Socio)
-        #print(str(variables.socios[0]))
         variables.count=0
         variables.data_socio()
         ToSend="Gracias , recuerde que no tenemos natacion"
@@ -139,6 +131,21 @@ def process_whatsapp_message(body):
         data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
         send_message(data)
 
+    elif variables.count==4 and (message_body!="No" and message_body!="Si"):
+        variables.count=4
+        variables.ErrorCounter += 1
+        if variables.ErrorCounter==3:
+            ToSend="Comenzaremos de nuevo"
+            variables.nuevo_Socio.poner_nombre(None)
+            variables.nuevo_Socio.Poner_documento(None)
+            variables.count=0
+            data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+            send_message(data)
+        else:
+            ToSend="Estan sus datos correctos?"+"\nNombre y apellido : "+ str(variables.nuevo_Socio.nombre) + "\nDocumento : " + str(variables.nuevo_Socio.documento) + "\nResponda Si o No"
+            data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+            send_message(data)
+
     elif message_body=="2":
         ToSend="Diga horario que desa reservar"
         variables.count=0
@@ -147,8 +154,13 @@ def process_whatsapp_message(body):
     
     else:
         ToSend="introduzca los datos correctamente"
-        variables.count=200000000000
-        print(variables.count)
+        variables.count=0
+        ToSend="1) hacerme socio\n2) reservar cancha"
+        variables.nuevo_Socio.poner_nombre(None)
+        variables.nuevo_Socio.Poner_documento(None)
+        variables.count=0
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
     
     # TODO: implement custom function here
     #response = generate_response(ToSend)
