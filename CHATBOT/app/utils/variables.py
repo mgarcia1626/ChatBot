@@ -1,10 +1,9 @@
 
 import pandas as pd
+import openpyxl
 
 #Count es para saber donde estas.
 count=0
-Lista_de_socios=[]
-socios_dict = []
 ErrorCounter=0
 
 class socio:
@@ -110,26 +109,29 @@ def agregar_aLista(socio_cargado):
     Nocupacion= socio_cargado.ocupacion
     Usuario=[Napellido,Nnombre,NDNI,NfechaNac,Nedad,Nsexo,Ndireccion,Npisodpto,Nlocalidad,Nprovincia,NcodPost,NNacionalidad,Ntelfijo,Ncelular,Nmail,Nocupacion]
     print(Usuario)
-    Lista_de_socios.append(Usuario)
-    print(Lista_de_socios)
+    return Usuario
     
 nuevo_Socio = socio(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
 
 # Crear una lista de diccionarios con los atributos de los objetos
 
-def data_socio():
-     # Crear un DataFrame con los datos de los socios
-     #AGREGAR FECHA 
-    df_socios = pd.DataFrame(Lista_de_socios, columns=["apellido","nombre","DNI","fechaNac","edad","sexo","direccion","pisodpto","localidad","provincia","codPost","Nacionalidad","telfijo","celular","mail","ocupacion"])
+def data_socio(usuario):
 
-    # Exportar a Excel
-    df_socios.to_excel("socios.xlsx", index=False)
+     # Abrir el archivo Excel existente
+    wb = openpyxl.load_workbook('socios.xlsx')
+    sheet = wb.active  # O puedes usar wb['nombre_de_hoja'] si la hoja tiene un nombre específico
 
+    # Agregar una nueva fila
+    nueva_fila =  usuario# Esto es solo un ejemplo
+    sheet.append(nueva_fila)
+
+    # Guardar el archivo con las nuevas filas agregadas
+    wb.save('socios.xlsx')
+    
 def Decision_func(count,message_body,ErrorCounter):
 
-    ErrorCounterstatus=ErrorCounter
-    if count==0:
+    if message_body=="VOLVER A EMPEZAR":
         nuevo_Socio.poner_apellido(None)
         nuevo_Socio.poner_nombre(None)
         nuevo_Socio.poner_DNI(None)
@@ -146,242 +148,267 @@ def Decision_func(count,message_body,ErrorCounter):
         nuevo_Socio.poner_celular(None)
         nuevo_Socio.poner_mail(None)
         nuevo_Socio.poner_ocupacion(None)
-        Counter=count+1
-        ToSend="1) hacerme socio\n2) reservar cancha"
-
-    elif message_body=="1" and count==1:
-        ToSend=("Si en algun momento del proceso cargo algun dato erroneo , escriba VOLVER A EMPEZAR"  + "\n"
-        + "\n"
-        + "Introduzca Apellido"
-        )
-        Counter=count+1
-
-    elif count==2:
-        nuevo_Socio.poner_apellido(message_body)
-        ToSend="Introduzca nombres"
-        Counter=count+1
-       
-    elif count==3:
-        nuevo_Socio.poner_nombre(message_body)
-        ToSend="Introduzca Numero de Documento"
-        Counter=count+1      
-    
-    elif count==4:
-        nuevo_Socio.poner_DNI(message_body)
-        ToSend="Introduzca fecha de nacimiento (DIA/MES/AÑO)"
-        Counter=count+1
-    
-    elif count==5:
-        nuevo_Socio.poner_fechaNac(message_body)
-        ToSend="Introduzca edad"
-        Counter=count+1
-
-    elif count==6:
-        nuevo_Socio.poner_edad(message_body)
-        ToSend="Introduzca sexo (M/F/X)"
-        Counter=count+1
-
-    elif count == 7:
-        nuevo_Socio.poner_sexo(message_body)
-        ToSend = "Introduzca dirección"
-        Counter = count + 1
-
-    elif count == 8:
-        nuevo_Socio.poner_direccion(message_body)
-        ToSend = "Introduzca piso/departamento"
-        Counter = count + 1
-
-    elif count == 9:
-        nuevo_Socio.poner_pisodpto(message_body)
-        ToSend = "Introduzca localidad"
-        Counter = count + 1
-
-    elif count == 10:
-        nuevo_Socio.poner_localidad(message_body)
-        ToSend = "Introduzca provincia"
-        Counter = count + 1
-
-    elif count == 11:
-        nuevo_Socio.poner_provincia(message_body)
-        ToSend = "Introduzca código postal"
-        Counter = count + 1
-
-    elif count == 12:
-        nuevo_Socio.poner_codPost(message_body)
-        ToSend = "Introduzca nacionalidad"
-        Counter = count + 1
-
-    elif count == 13:
-        nuevo_Socio.poner_Nacionalidad(message_body)
-        ToSend = "Introduzca teléfono fijo"
-        Counter = count + 1
-
-    elif count == 14:
-        nuevo_Socio.poner_telfijo(message_body)
-        ToSend = "Introduzca celular"
-        Counter = count + 1
-
-    elif count == 15:
-        nuevo_Socio.poner_celular(message_body)
-        ToSend = "Introduzca correo electrónico"
-        Counter = count + 1
-
-    elif count == 16:
-        nuevo_Socio.poner_mail(message_body)
-        ToSend = "Introduzca ocupación"
-        Counter = count + 1
-
-    elif count == 17:
-        nuevo_Socio.poner_ocupacion(message_body)
-        Counter = count + 1
-        ToSend = (
-            "Estan sus datos correctos?\n"
-            + "Apellido: " + str(nuevo_Socio.apellido) + "\n"
-            + "Nombre: " + str(nuevo_Socio.nombre) + "\n"
-            + "Numero de documento: " + str(nuevo_Socio.DNI) + "\n"
-            + "Fecha de nacimiento: " + str(nuevo_Socio.fechaNac) + "\n"
-            + "Edad: " + str(nuevo_Socio.edad) + "\n"
-            + "Sexo: " + str(nuevo_Socio.sexo) + "\n"
-            + "Dirección: " + str(nuevo_Socio.direccion) + "\n"
-            + "Piso/Departamento: " + str(nuevo_Socio.pisodpto) + "\n"
-            + "Localidad: " + str(nuevo_Socio.localidad) + "\n"
-            + "Provincia: " + str(nuevo_Socio.provincia) + "\n"
-            + "Código postal: " + str(nuevo_Socio.codPost) + "\n"
-            + "Nacionalidad: " + str(nuevo_Socio.Nacionalidad) + "\n"
-            + "Numero Teléfono fijo: " + str(nuevo_Socio.telfijo) + "\n"
-            + "Numero Celular: " + str(nuevo_Socio.celular) + "\n"
-            + "Correo electrónico: " + str(nuevo_Socio.mail) + "\n"
-            + "Ocupación: " + str(nuevo_Socio.ocupacion) + "\n"
-            + "Responda Si o No"
-        )
-    
-    elif count==18 and message_body=="Si":
-        agregar_aLista(nuevo_Socio)
-        data_socio()
-        ToSend="Gracias , recuerde que no tenemos natacion"
-        Counter=0
-        
-    elif count==18 and message_body=="No":
-        nuevo_Socio.poner_apellido(None)
-        nuevo_Socio.poner_nombre(None)
-        nuevo_Socio.poner_DNI(None)
-        nuevo_Socio.poner_fechaNac(None)
-        nuevo_Socio.poner_edad(None)
-        nuevo_Socio.poner_sexo(None)
-        nuevo_Socio.poner_direccion(None)
-        nuevo_Socio.poner_pisodpto(None)
-        nuevo_Socio.poner_localidad(None)
-        nuevo_Socio.poner_provincia(None)
-        nuevo_Socio.poner_codPost(None)
-        nuevo_Socio.poner_Nacionalidad(None)
-        nuevo_Socio.poner_telfijo(None)
-        nuevo_Socio.poner_celular(None)
-        nuevo_Socio.poner_mail(None)
-        nuevo_Socio.poner_ocupacion(None)
-        ToSend="Por favor vuelva a introducir Apellido"
-        Counter=2
-
-    elif count==18 and (message_body!="No" and message_body!="Si"):
-        if ErrorCounter==3:
-            nuevo_Socio.poner_nombre(None)
-            nuevo_Socio.Poner_documento(None)
-            ToSend="Comenzaremos de nuevo\n1) hacerme socio\n2) reservar cancha"
-            Counter=0
-            ErrorCounterstatus=0
-        else:
-            ToSend = (
-            "Estan sus datos correctos?\n"
-            + "Apellido: " + str(nuevo_Socio.apellido) + "\n"
-            + "Nombre: " + str(nuevo_Socio.nombre) + "\n"
-            + "Documento (DNI): " + str(nuevo_Socio.DNI) + "\n"
-            + "Fecha de nacimiento: " + str(nuevo_Socio.fechaNac) + "\n"
-            + "Edad: " + str(nuevo_Socio.edad) + "\n"
-            + "Sexo: " + str(nuevo_Socio.sexo) + "\n"
-            + "Dirección: " + str(nuevo_Socio.direccion) + "\n"
-            + "Piso/Departamento: " + str(nuevo_Socio.pisodpto) + "\n"
-            + "Localidad: " + str(nuevo_Socio.localidad) + "\n"
-            + "Provincia: " + str(nuevo_Socio.provincia) + "\n"
-            + "Código postal: " + str(nuevo_Socio.codPost) + "\n"
-            + "Nacionalidad: " + str(nuevo_Socio.Nacionalidad) + "\n"
-            + "Teléfono fijo: " + str(nuevo_Socio.telfijo) + "\n"
-            + "Celular: " + str(nuevo_Socio.celular) + "\n"
-            + "Correo electrónico: " + str(nuevo_Socio.mail) + "\n"
-            + "Ocupación: " + str(nuevo_Socio.ocupacion) + "\n"
-            +"\n"
-            + "Responda Si o No"
-        )
-            Counter=count
-            ErrorCounterstatus= ErrorCounter+1
-            #print(ErrorCounterstatus)
-            
-    elif message_body=="2" and count==1:
-        ToSend="Esto no esta disponbile hasta tener natacion"
-
-    else:
-        ToSend="Ocurrio un error en el sistema , volveremos a empezar"
         Counter=0
         ErrorCounterstatus=0
-    return ToSend,Counter,ErrorCounterstatus
+        ToSend="Hola , soy el bot del club Pedro Echague , mi nombre es guerrerito. Con que puedo ayudarte?" + "\n" 
+        + "1) hacerme socio"
+        +"\n"
+        + "2) reservar cancha"
+    
+    else:
+        ErrorCounterstatus=ErrorCounter
+        if count==0:
+            nuevo_Socio.poner_apellido(None)
+            nuevo_Socio.poner_nombre(None)
+            nuevo_Socio.poner_DNI(None)
+            nuevo_Socio.poner_fechaNac(None)
+            nuevo_Socio.poner_edad(None)
+            nuevo_Socio.poner_sexo(None)
+            nuevo_Socio.poner_direccion(None)
+            nuevo_Socio.poner_pisodpto(None)
+            nuevo_Socio.poner_localidad(None)
+            nuevo_Socio.poner_provincia(None)
+            nuevo_Socio.poner_codPost(None)
+            nuevo_Socio.poner_Nacionalidad(None)
+            nuevo_Socio.poner_telfijo(None)
+            nuevo_Socio.poner_celular(None)
+            nuevo_Socio.poner_mail(None)
+            nuevo_Socio.poner_ocupacion(None)
+            Counter=count+1
+            ToSend="1) hacerme socio\n2) reservar cancha"
 
-#ERROR=0
-#cONTADOR=0
-#
-#nuevo_Socio_Test = socio(
-#    apellido="Pérez",
-#    nombre="Juan",
-#    DNI="12345678",
-#    fechaNac="01/01/1990",
-#    edad=33,
-#    sexo="Masculino",
-#    direccion="Calle Falsa 123",
-#    pisodpto="1B",
-#    localidad="Buenos Aires",
-#    provincia="Buenos Aires",
-#    codPost="1000",
-#    Nacionalidad="Argentina",
-#    telfijo="011-12345678",
-#    celular="11-987654321",
-#    mail="juan.perez@example.com",
-#    ocupacion="Ingeniero"
-#)
-#
-#
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,1,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"1",ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.apellido,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.nombre,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.DNI,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.fechaNac,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.edad,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.sexo,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.direccion,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.pisodpto,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.localidad,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.provincia,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.codPost,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.Nacionalidad,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.telfijo,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.celular,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.mail,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.ocupacion,ERROR)
-#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"Si",ERROR)
-#
-#
-#
-#print(f"Apellido: {nuevo_Socio.apellido}")
-#print(f"Nombre: {nuevo_Socio.nombre}")
-#print(f"DNI: {nuevo_Socio.DNI}")
-#print(f"Fecha de Nacimiento: {nuevo_Socio.fechaNac}")
-#print(f"Edad: {nuevo_Socio.edad}")
-#print(f"Sexo: {nuevo_Socio.sexo}")
-#print(f"Dirección: {nuevo_Socio.direccion}")
-#print(f"Piso/Departamento: {nuevo_Socio.pisodpto}")
-#print(f"Localidad: {nuevo_Socio.localidad}")
-#print(f"Provincia: {nuevo_Socio.provincia}")
-#print(f"Código Postal: {nuevo_Socio.codPost}")
-#print(f"Nacionalidad: {nuevo_Socio.Nacionalidad}")
-#print(f"Teléfono Fijo: {nuevo_Socio.telfijo}")
-#print(f"Celular: {nuevo_Socio.celular}")
-#print(f"Correo Electrónico: {nuevo_Socio.mail}")
-#print(f"Ocupación: {nuevo_Socio.ocupacion}")
-#
+        elif message_body=="1" and count==1:
+            ToSend=("Si en algun momento del proceso cargo algun dato erroneo , escriba VOLVER A EMPEZAR"  + "\n"
+            + "\n"
+            + "Introduzca Apellido"
+            )
+            Counter=count+1
+
+        elif count==2:
+            nuevo_Socio.poner_apellido(message_body)
+            ToSend="Introduzca nombres"
+            Counter=count+1
+
+        elif count==3:
+            nuevo_Socio.poner_nombre(message_body)
+            ToSend="Introduzca Numero de Documento"
+            Counter=count+1      
+
+        elif count==4:
+            nuevo_Socio.poner_DNI(message_body)
+            ToSend="Introduzca fecha de nacimiento (DIA/MES/AÑO)"
+            Counter=count+1
+
+        elif count==5:
+            nuevo_Socio.poner_fechaNac(message_body)
+            ToSend="Introduzca edad"
+            Counter=count+1
+
+        elif count==6:
+            nuevo_Socio.poner_edad(message_body)
+            ToSend="Introduzca sexo (M/F/X)"
+            Counter=count+1
+
+        elif count == 7:
+            nuevo_Socio.poner_sexo(message_body)
+            ToSend = "Introduzca dirección"
+            Counter = count + 1
+
+        elif count == 8:
+            nuevo_Socio.poner_direccion(message_body)
+            ToSend = "Introduzca piso/departamento"
+            Counter = count + 1
+
+        elif count == 9:
+            nuevo_Socio.poner_pisodpto(message_body)
+            ToSend = "Introduzca localidad"
+            Counter = count + 1
+
+        elif count == 10:
+            nuevo_Socio.poner_localidad(message_body)
+            ToSend = "Introduzca provincia"
+            Counter = count + 1
+
+        elif count == 11:
+            nuevo_Socio.poner_provincia(message_body)
+            ToSend = "Introduzca código postal"
+            Counter = count + 1
+
+        elif count == 12:
+            nuevo_Socio.poner_codPost(message_body)
+            ToSend = "Introduzca nacionalidad"
+            Counter = count + 1
+
+        elif count == 13:
+            nuevo_Socio.poner_Nacionalidad(message_body)
+            ToSend = "Introduzca teléfono fijo"
+            Counter = count + 1
+
+        elif count == 14:
+            nuevo_Socio.poner_telfijo(message_body)
+            ToSend = "Introduzca celular"
+            Counter = count + 1
+
+        elif count == 15:
+            nuevo_Socio.poner_celular(message_body)
+            ToSend = "Introduzca correo electrónico"
+            Counter = count + 1
+
+        elif count == 16:
+            nuevo_Socio.poner_mail(message_body)
+            ToSend = "Introduzca ocupación"
+            Counter = count + 1
+
+        elif count == 17:
+            nuevo_Socio.poner_ocupacion(message_body)
+            Counter = count + 1
+            ToSend = (
+                "Estan sus datos correctos?\n"
+                + "Apellido: " + str(nuevo_Socio.apellido) + "\n"
+                + "Nombre: " + str(nuevo_Socio.nombre) + "\n"
+                + "Numero de documento: " + str(nuevo_Socio.DNI) + "\n"
+                + "Fecha de nacimiento: " + str(nuevo_Socio.fechaNac) + "\n"
+                + "Edad: " + str(nuevo_Socio.edad) + "\n"
+                + "Sexo: " + str(nuevo_Socio.sexo) + "\n"
+                + "Dirección: " + str(nuevo_Socio.direccion) + "\n"
+                + "Piso/Departamento: " + str(nuevo_Socio.pisodpto) + "\n"
+                + "Localidad: " + str(nuevo_Socio.localidad) + "\n"
+                + "Provincia: " + str(nuevo_Socio.provincia) + "\n"
+                + "Código postal: " + str(nuevo_Socio.codPost) + "\n"
+                + "Nacionalidad: " + str(nuevo_Socio.Nacionalidad) + "\n"
+                + "Numero Teléfono fijo: " + str(nuevo_Socio.telfijo) + "\n"
+                + "Numero Celular: " + str(nuevo_Socio.celular) + "\n"
+                + "Correo electrónico: " + str(nuevo_Socio.mail) + "\n"
+                + "Ocupación: " + str(nuevo_Socio.ocupacion) + "\n"
+                + "Responda Si o No"
+            )
+
+        elif count==18 and message_body=="Si":
+            Toadd=agregar_aLista(nuevo_Socio)
+            data_socio(Toadd)
+            ToSend="Gracias , recuerde que no tenemos natacion"
+            Counter=0
+
+        elif count==18 and message_body=="No":
+            nuevo_Socio.poner_apellido(None)
+            nuevo_Socio.poner_nombre(None)
+            nuevo_Socio.poner_DNI(None)
+            nuevo_Socio.poner_fechaNac(None)
+            nuevo_Socio.poner_edad(None)
+            nuevo_Socio.poner_sexo(None)
+            nuevo_Socio.poner_direccion(None)
+            nuevo_Socio.poner_pisodpto(None)
+            nuevo_Socio.poner_localidad(None)
+            nuevo_Socio.poner_provincia(None)
+            nuevo_Socio.poner_codPost(None)
+            nuevo_Socio.poner_Nacionalidad(None)
+            nuevo_Socio.poner_telfijo(None)
+            nuevo_Socio.poner_celular(None)
+            nuevo_Socio.poner_mail(None)
+            nuevo_Socio.poner_ocupacion(None)
+            ToSend="Por favor vuelva a introducir Apellido"
+            Counter=2
+
+        elif count==18 and (message_body!="No" and message_body!="Si"):
+            if ErrorCounter==3:
+                nuevo_Socio.poner_nombre(None)
+                nuevo_Socio.Poner_documento(None)
+                ToSend="Comenzaremos de nuevo\n1) hacerme socio\n2) reservar cancha"
+                Counter=0
+                ErrorCounterstatus=0
+            else:
+                ToSend = (
+                "Estan sus datos correctos?\n"
+                + "Apellido: " + str(nuevo_Socio.apellido) + "\n"
+                + "Nombre: " + str(nuevo_Socio.nombre) + "\n"
+                + "Documento (DNI): " + str(nuevo_Socio.DNI) + "\n"
+                + "Fecha de nacimiento: " + str(nuevo_Socio.fechaNac) + "\n"
+                + "Edad: " + str(nuevo_Socio.edad) + "\n"
+                + "Sexo: " + str(nuevo_Socio.sexo) + "\n"
+                + "Dirección: " + str(nuevo_Socio.direccion) + "\n"
+                + "Piso/Departamento: " + str(nuevo_Socio.pisodpto) + "\n"
+                + "Localidad: " + str(nuevo_Socio.localidad) + "\n"
+                + "Provincia: " + str(nuevo_Socio.provincia) + "\n"
+                + "Código postal: " + str(nuevo_Socio.codPost) + "\n"
+                + "Nacionalidad: " + str(nuevo_Socio.Nacionalidad) + "\n"
+                + "Teléfono fijo: " + str(nuevo_Socio.telfijo) + "\n"
+                + "Celular: " + str(nuevo_Socio.celular) + "\n"
+                + "Correo electrónico: " + str(nuevo_Socio.mail) + "\n"
+                + "Ocupación: " + str(nuevo_Socio.ocupacion) + "\n"
+                +"\n"
+                + "Responda Si o No"
+            )
+                Counter=count
+                ErrorCounterstatus= ErrorCounter+1
+                #print(ErrorCounterstatus)
+
+        elif message_body=="2" and count==1:
+            ToSend="Esto no esta disponbile hasta tener natacion"
+
+        else:
+            ToSend="Ocurrio un error en el sistema , volveremos a empezar"
+            Counter=0
+            ErrorCounterstatus=0
+        return ToSend,Counter,ErrorCounterstatus
+
+ERROR=0
+cONTADOR=0
+
+nuevo_Socio_Test = socio(
+    apellido="Pérez",
+    nombre="Juan",
+    DNI="12345678",
+    fechaNac="01/01/1990",
+    edad=33,
+    sexo="Masculino",
+    direccion="Calle Falsa 123",
+    pisodpto="1B",
+    localidad="Buenos Aires",
+    provincia="Buenos Aires",
+    codPost="1000",
+    Nacionalidad="Argentina",
+    telfijo="011-12345678",
+    celular="11-987654321",
+    mail="juan.perez@example.com",
+    ocupacion="Ingeniero"
+)
+
+
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,1,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"1",ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.apellido,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.nombre,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.DNI,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.fechaNac,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.edad,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.sexo,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.direccion,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.pisodpto,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.localidad,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.provincia,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.codPost,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.Nacionalidad,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.telfijo,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.celular,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.mail,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.ocupacion,ERROR)
+SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"Si",ERROR)
+
+
+
+print(f"Apellido: {nuevo_Socio.apellido}")
+print(f"Nombre: {nuevo_Socio.nombre}")
+print(f"DNI: {nuevo_Socio.DNI}")
+print(f"Fecha de Nacimiento: {nuevo_Socio.fechaNac}")
+print(f"Edad: {nuevo_Socio.edad}")
+print(f"Sexo: {nuevo_Socio.sexo}")
+print(f"Dirección: {nuevo_Socio.direccion}")
+print(f"Piso/Departamento: {nuevo_Socio.pisodpto}")
+print(f"Localidad: {nuevo_Socio.localidad}")
+print(f"Provincia: {nuevo_Socio.provincia}")
+print(f"Código Postal: {nuevo_Socio.codPost}")
+print(f"Nacionalidad: {nuevo_Socio.Nacionalidad}")
+print(f"Teléfono Fijo: {nuevo_Socio.telfijo}")
+print(f"Celular: {nuevo_Socio.celular}")
+print(f"Correo Electrónico: {nuevo_Socio.mail}")
+print(f"Ocupación: {nuevo_Socio.ocupacion}")
