@@ -88,7 +88,7 @@ def process_whatsapp_message(body):
     #if para salvar informacion
 
 
-    ToSend,variables.count=variables.Decision_func(variables.count,message_body)
+    ToSend,variables.count,variables.ErrorCounter=variables.Decision_func(variables.count,message_body,variables.ErrorCounter)
 
     data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
     send_message(data)
