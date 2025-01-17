@@ -27,8 +27,9 @@ def handle_message():
         response: A tuple containing a JSON response and an HTTP status code.
     """
     body = request.get_json()
-    # logging.info(f"request body: {body}")
+    #print("esto es 2",logging.info(f"request body: {body}"))
 
+    
     # Check if it's a WhatsApp status update
     if (
         body.get("entry", [{}])[0]
@@ -51,6 +52,7 @@ def handle_message():
             )
     except json.JSONDecodeError:
         logging.error("Failed to decode JSON")
+        print("esto es body2" , jsonify , body)
         return jsonify({"status": "error", "message": "Invalid JSON provided"}), 400
 
 

@@ -1,9 +1,11 @@
 import logging
+import flask
 from flask import current_app, jsonify
 import json
 import requests
 from app.utils import variables
 from app.utils.variables import socio
+import os
 
 #print(variables.count)
 
@@ -79,19 +81,33 @@ def process_text_for_whatsapp(text):
 
 
 def process_whatsapp_message(body):
-    wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
-    name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
+    print("aca esta el mensaje entero" , body)
+    #Body es el mensaje entero
+    message_type = body["entry"][0]["changes"][0]["value"]["messages"][0]["type"]
+    print(message_type)
+    print({current_app.config['ACCESS_TOKEN']})
 
-    message = body["entry"][0]["changes"][0]["value"]["messages"][0]
-    message_body = message["text"]["body"]
-           
-    #if para salvar informacion
+    if message_type=="image":
+        
+        message_id = body["entry"][0]["changes"][0]["value"]["messages"][0]["image"]["id"]
+        variables.Obtener_mediaID(message_id,os.getenv("ACCESS_TOKEN"))
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response("imagen recibida"))
+        send_message(data)
+    
+    elif message_type=="text":
+        wa_id = body["entry"][0]["changes"][0]["value"]["contacts"][0]["wa_id"]
+        name = body["entry"][0]["changes"][0]["value"]["contacts"][0]["profile"]["name"]
 
+        message = body["entry"][0]["changes"][0]["value"]["messages"][0]
+        message_body = message["text"]["body"]
 
-    ToSend,variables.count,variables.ErrorCounter=variables.Decision_func(variables.count,message_body,variables.ErrorCounter)
+        ToSend,variables.count,variables.ErrorCounter=variables.Decision_func(variables.count,message_body,variables.ErrorCounter)
 
-    data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
-    send_message(data)
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response(ToSend))
+        send_message(data)
+    else:
+        data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response("OCURRIO UN ERROR"))
+        send_message(data)
 
 
 #    if variables.count==0:

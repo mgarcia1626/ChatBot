@@ -1,5 +1,5 @@
 from googleapiclient.http import MediaFileUpload
-from CHATBOT.app.utils.Google import Create_Service
+from CHATBOT.Google import Create_Service
 
 CLIENT_SECRET_FILE = "AAAAA.json"
 API_NAME = "drive"

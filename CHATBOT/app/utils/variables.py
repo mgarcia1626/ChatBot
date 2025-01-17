@@ -2,7 +2,9 @@
 import pandas as pd
 import openpyxl
 from googleapiclient.http import MediaFileUpload
+import Google
 from Google import Create_Service
+import requests
 
 #Count es para saber donde estas.
 count=0
@@ -380,64 +382,101 @@ def Decision_func(count,message_body,ErrorCounter):
             ErrorCounterstatus=0
         return ToSend,Counter,ErrorCounterstatus
 
-ERROR=0
-cONTADOR=0
+#ERROR=0
+#cONTADOR=0
+#
+#nuevo_Socio_Test = socio(
+#    apellido="Pérez",
+#    nombre="Juan",
+#    DNI="12345678",
+#    fechaNac="01/01/1990",
+#    edad=33,
+#    sexo="Masculino",
+#    direccion="Calle Falsa 123",
+#    pisodpto="1B",
+#    localidad="Buenos Aires",
+#    provincia="Buenos Aires",
+#    codPost="1000",
+#    Nacionalidad="Argentina",
+#    telfijo="011-12345678",
+#    celular="11-987654321",
+#    mail="juan.perez@example.com",
+#    ocupacion="Ingeniero"
+#)
+#
+#
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,1,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"1",ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.apellido,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.nombre,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.DNI,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.fechaNac,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.edad,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.sexo,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.direccion,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.pisodpto,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.localidad,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.provincia,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.codPost,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.Nacionalidad,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.telfijo,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.celular,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.mail,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.ocupacion,ERROR)
+#SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"Si",ERROR)
+#
+#
+#
+#print(f"Apellido: {nuevo_Socio.apellido}")
+#print(f"Nombre: {nuevo_Socio.nombre}")
+#print(f"DNI: {nuevo_Socio.DNI}")
+#print(f"Fecha de Nacimiento: {nuevo_Socio.fechaNac}")
+#print(f"Edad: {nuevo_Socio.edad}")
+#print(f"Sexo: {nuevo_Socio.sexo}")
+#print(f"Dirección: {nuevo_Socio.direccion}")
+#print(f"Piso/Departamento: {nuevo_Socio.pisodpto}")
+#print(f"Localidad: {nuevo_Socio.localidad}")
+#print(f"Provincia: {nuevo_Socio.provincia}")
+#print(f"Código Postal: {nuevo_Socio.codPost}")
+#print(f"Nacionalidad: {nuevo_Socio.Nacionalidad}")
+#print(f"Teléfono Fijo: {nuevo_Socio.telfijo}")
+#print(f"Celular: {nuevo_Socio.celular}")
+#print(f"Correo Electrónico: {nuevo_Socio.mail}")
+#print(f"Ocupación: {nuevo_Socio.ocupacion}")
 
-nuevo_Socio_Test = socio(
-    apellido="Pérez",
-    nombre="Juan",
-    DNI="12345678",
-    fechaNac="01/01/1990",
-    edad=33,
-    sexo="Masculino",
-    direccion="Calle Falsa 123",
-    pisodpto="1B",
-    localidad="Buenos Aires",
-    provincia="Buenos Aires",
-    codPost="1000",
-    Nacionalidad="Argentina",
-    telfijo="011-12345678",
-    celular="11-987654321",
-    mail="juan.perez@example.com",
-    ocupacion="Ingeniero"
-)
 
 
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,1,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"1",ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.apellido,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.nombre,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.DNI,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.fechaNac,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.edad,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.sexo,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.direccion,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.pisodpto,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.localidad,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.provincia,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.codPost,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.Nacionalidad,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.telfijo,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.celular,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.mail,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,nuevo_Socio_Test.ocupacion,ERROR)
-SEND,cONTADOR,ERROR=Decision_func(cONTADOR,"Si",ERROR)
+def Obtener_mediaID(media_id,access_token):
+    print(access_token)
+    # URL para la solicitud
+    url = f"https://graph.facebook.com/v21.0/{media_id}/"
 
+    # Encabezados de la solicitud
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
 
+    # Realiza la solicitud GET
+    response = requests.get(url, headers=headers)
+    print("esto es response ",response)
+    # Maneja la respuesta
+    if response.status_code == 200:
+        print("Respuesta exitosa:", response.json())
+    else:
+        print(f"Error: {response.status_code} - {response.text}")
+    
+    ResponseData=response.json()
+    
+    new_url=ResponseData["url"]
+    ##segunda llamada
+    response2 = requests.get(new_url, headers=headers)
 
-print(f"Apellido: {nuevo_Socio.apellido}")
-print(f"Nombre: {nuevo_Socio.nombre}")
-print(f"DNI: {nuevo_Socio.DNI}")
-print(f"Fecha de Nacimiento: {nuevo_Socio.fechaNac}")
-print(f"Edad: {nuevo_Socio.edad}")
-print(f"Sexo: {nuevo_Socio.sexo}")
-print(f"Dirección: {nuevo_Socio.direccion}")
-print(f"Piso/Departamento: {nuevo_Socio.pisodpto}")
-print(f"Localidad: {nuevo_Socio.localidad}")
-print(f"Provincia: {nuevo_Socio.provincia}")
-print(f"Código Postal: {nuevo_Socio.codPost}")
-print(f"Nacionalidad: {nuevo_Socio.Nacionalidad}")
-print(f"Teléfono Fijo: {nuevo_Socio.telfijo}")
-print(f"Celular: {nuevo_Socio.celular}")
-print(f"Correo Electrónico: {nuevo_Socio.mail}")
-print(f"Ocupación: {nuevo_Socio.ocupacion}")
+    if response2.status_code == 200:
+        # Guarda la imagen como un archivo local
+        with open("imagen.jpg", "wb") as file:
+            file.write(response2.content)
+        print("Imagen guardada como 'imagen.jpg'")
+    else:
+        print(f"Error al descargar la imagen: {response2.status_code}")
+    
+    print(response2.content)
