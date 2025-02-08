@@ -4,6 +4,8 @@ import openpyxl
 from googleapiclient.http import MediaFileUpload
 from Google import Create_Service
 import requests
+from PIL import Image
+import pytesseract
 
 #Count es para saber donde estas.
 count=0
@@ -470,10 +472,34 @@ def Decision_func(count,message_body,ErrorCounter):
 #print(f"Correo Electrónico: {nuevo_Socio.mail}")
 #print(f"Ocupación: {nuevo_Socio.ocupacion}")
 
+def validar_dni_argentino(image_path):
+
+    pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    count=0
+    # Extraer texto de la imagen
+    texto = pytesseract.image_to_string(Image.open(image_path), lang='spa')
+    print(texto)
+    
+    # Palabras clave para validar
+    palabras_clave = ["REPUBLICA ARGENTINA", "MERCOSUR", "REGISTRO NACIONAL", "MINISTERIO DEL INTERIOR","EJEMPLAR","ARGENTINA","DOCUMENTO","Nombre / Name"]
+    
+    # Verificar si las palabras clave están en el texto
+    for palabra in palabras_clave:
+        if palabra in texto:
+            count+=1
+            print(count)
+            print(palabra)
+        else:
+            print()
+    
+    if count>2:
+        return "La foto subida es un DNI argentino válido."
+    else:
+        return "La foto subida no es un DNI argentino válido."
 
 
 def Obtener_mediaID(media_id,access_token):
-    print(access_token)
+    #print(access_token)
     # URL para la solicitud
     url = f"https://graph.facebook.com/v21.0/{media_id}/"
 
@@ -501,8 +527,12 @@ def Obtener_mediaID(media_id,access_token):
         # Guarda la imagen como un archivo local
         with open("imagen.jpg", "wb") as file:
             file.write(response2.content)
-        print("Imagen guardada como 'imagen.jpg'")
+            print("Imagen guardada como 'imagen.jpg'")
+            DNIOK=validar_dni_argentino("imagen.jpg")
+            
+            print(DNIOK)
     else:
         print(f"Error al descargar la imagen: {response2.status_code}")
     
-    print(response2.content)
+    #print(response2.content)
+

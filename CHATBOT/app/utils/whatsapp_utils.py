@@ -85,10 +85,11 @@ def process_whatsapp_message(body):
     #Body es el mensaje entero
     message_type = body["entry"][0]["changes"][0]["value"]["messages"][0]["type"]
     print(message_type)
-    print({current_app.config['ACCESS_TOKEN']})
+    #print({current_app.config['ACCESS_TOKEN']})
 
     if message_type=="image":
         
+        print("es imagen")
         message_id = body["entry"][0]["changes"][0]["value"]["messages"][0]["image"]["id"]
         variables.Obtener_mediaID(message_id,os.getenv("ACCESS_TOKEN"))
         data = get_text_message_input(current_app.config["RECIPIENT_WAID"], generate_response("imagen recibida"))
